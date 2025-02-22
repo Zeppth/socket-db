@@ -118,28 +118,30 @@ export class createServerDB extends EventEmitter {
                         case 'chain': {
                             let func = '740';
                             const db = await this.lowdb.db(data.database);
+                            if (!db) return reply({ status: false, error: 'Database does not exist' });
                             for (const o of data.chain) {
                                 if (!o.type || !Array.isArray(o.payload)) {
                                     const errorMsg = 'Invalid request structure';
                                     reply({ status: false, error: errorMsg });
-                                    this.emit('error', {
+                                    return this.emit('error', {
                                         type: 'chain-error',
                                         user_id: socket.id,
                                         error: errorMsg
                                     })
-                                    return;
                                 }
-                                if (!['get', 'set', 'has', 'assign', 'delete'].includes(o.type)) {
+
+                                if (!db[o.type]) {
                                     const errorMsg = `Invalid method: ${o.type}`;
                                     reply({ status: false, error: errorMsg });
-                                    this.emit('error', {
+                                    return this.emit('error', {
                                         type: 'chain-error',
                                         user_id: socket.id,
                                         error: errorMsg
                                     })
-                                    return;
                                 }
+
                                 if (func === '740') {
+                                    console.log(o.type)
                                     if (typeof db[o.type] === 'function') {
                                         func = db[o.type](...o.payload);
                                     } else {
@@ -153,6 +155,7 @@ export class createServerDB extends EventEmitter {
                                         return;
                                     }
                                 } else {
+                                    console.log(o.type)
                                     if (typeof func[o.type] === 'function') {
                                         func = func[o.type](...o.payload);
                                     } else {
