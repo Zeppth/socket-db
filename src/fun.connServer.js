@@ -3,6 +3,7 @@ import { WebSocketDB } from "./fun.socket.js"
 export class connServerDB {
     constructor(url) {
         this.socket = new WebSocketDB(url)
+        this.ev = this.socket
     }
 
     async createDB(name, payload) {

@@ -10,13 +10,13 @@ const randomId = (number) => crypto
     .toString('hex')
     .toUpperCase();
 
-export class createServerDB extends EventEmitter {
+export class createServerDB {
     constructor({
         port = 8080,
         folder = 'data'
     }) {
-        super();
         this.port = port;
+        this.ev = new EventEmitter()
         this.server = http.createServer();
         this.lowdb = new FunLowDB(folder)
         this.load = async () =>
@@ -28,18 +28,18 @@ export class createServerDB extends EventEmitter {
         this.WebSocket.on('connection', (socket) => {
             socket.id = randomId(6);
             users.set(socket.id, socket);
-            this.emit('connected', {
+
+            this.ev.emit('connection', {
                 type: 'user-connected',
                 user_id: socket.id
-            });
-
+            })
 
             socket.on('close', () => {
                 users.delete(socket.id);
-                this.emit('disconnected', {
+                this.ev.emit('connection', {
                     type: 'user-disconnected',
                     user_id: socket.id
-                });
+                })
             });
 
             socket.on('message', async (data) => {
@@ -51,7 +51,7 @@ export class createServerDB extends EventEmitter {
                         status: false
                     });
                     socket.send(message);
-                    this.emit('error', {
+                    this.ev.emit('error', {
                         type: 'parse-error',
                         user_id: socket.id,
                         error: e.message
@@ -64,7 +64,7 @@ export class createServerDB extends EventEmitter {
                     socket.send(JSON.stringify(message));
                 };
 
-                this.emit('message', {
+                this.ev.emit('message', {
                     type: 'user-message',
                     user_id: socket.id,
                     input: { ...data }
@@ -125,7 +125,7 @@ export class createServerDB extends EventEmitter {
                                 if (!o.type || !Array.isArray(o.payload)) {
                                     const errorMsg = 'Invalid request structure';
                                     reply({ status: false, error: errorMsg });
-                                    return this.emit('error', {
+                                    return this.ev.emit('error', {
                                         type: 'chain-error',
                                         user_id: socket.id,
                                         error: errorMsg
@@ -135,7 +135,7 @@ export class createServerDB extends EventEmitter {
                                 if (!db[o.type]) {
                                     const errorMsg = `Invalid method: ${o.type}`;
                                     reply({ status: false, error: errorMsg });
-                                    return this.emit('error', {
+                                    return this.ev.emit('error', {
                                         type: 'chain-error',
                                         user_id: socket.id,
                                         error: errorMsg
@@ -143,13 +143,12 @@ export class createServerDB extends EventEmitter {
                                 }
 
                                 if (func === '740') {
-                                    console.log(o.type)
                                     if (typeof db[o.type] === 'function') {
                                         func = db[o.type](...o.payload);
                                     } else {
                                         const errorMsg = `Method ${o.type} not found in database`;
                                         reply({ status: false, error: errorMsg });
-                                        this.emit('error', {
+                                        this.ev.emit('error', {
                                             type: 'chain-error',
                                             user_id: socket.id,
                                             error: errorMsg
@@ -157,13 +156,12 @@ export class createServerDB extends EventEmitter {
                                         return;
                                     }
                                 } else {
-                                    console.log(o.type)
                                     if (typeof func[o.type] === 'function') {
                                         func = func[o.type](...o.payload);
                                     } else {
                                         const errorMsg = `Method ${o.type} not found in result`;
                                         reply({ status: false, error: errorMsg });
-                                        this.emit('error', {
+                                        this.ev.emit('error', {
                                             type: 'chain-error',
                                             user_id: socket.id,
                                             error: errorMsg
@@ -181,7 +179,7 @@ export class createServerDB extends EventEmitter {
                         default: {
                             const errorMsg = 'Invalid request type';
                             reply({ status: false, error: errorMsg });
-                            this.emit('error', {
+                            this.ev.emit('error', {
                                 type: 'request-type-error',
                                 user_id: socket.id,
                                 error: errorMsg
@@ -193,7 +191,7 @@ export class createServerDB extends EventEmitter {
                         status: false,
                         error: e
                     });
-                    this.emit('error', {
+                    this.ev.emit('error', {
                         type: 'unhandled-error',
                         user_id: socket.id,
                         error: errorMsg
@@ -203,7 +201,7 @@ export class createServerDB extends EventEmitter {
         });
 
         this.server.on('error', (error) => {
-            this.emit('server-error', {
+            this.ev.emit('server-error', {
                 type: 'server-error',
                 error: error.message
             });
@@ -211,7 +209,7 @@ export class createServerDB extends EventEmitter {
 
 
         this.server.listen(this.port, () => {
-            this.emit('running', {
+            this.ev.emit('running', {
                 port: this.port
             });
         });

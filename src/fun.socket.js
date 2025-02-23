@@ -49,7 +49,9 @@ export class WebSocketDB extends EventEmitter {
                 reconnecting: false,
                 AttemptsCount: 0,
             };
-            this.emit('connected');
+            this.emit('connection', {
+                type: 'open'
+            });
             resolve();
         });
 
@@ -59,11 +61,13 @@ export class WebSocketDB extends EventEmitter {
             catch (e) { data = undefined; }
             if (data && this.Id.has(data.id))
                 this.Id.get(data.id)(data);
-            this.emit('messages', data)
+            this.emit('message', data)
         });
 
         this.webSocket.on('close', () => {
-            this.emit('disconnected');
+            this.emit('connection', {
+                type: 'close',
+            });
             const errorData = {
                 type: 'websocket_closed',
                 message: 'WebSocket closed unexpectedly',
