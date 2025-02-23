@@ -19,6 +19,8 @@ export class createServerDB extends EventEmitter {
         this.port = port;
         this.server = http.createServer();
         this.lowdb = new FunLowDB(folder)
+        this.load = async () =>
+            await this.lowdb.load()
         this.WebSocket = new WebSocketServer({
             server: this.server
         });
