@@ -2,6 +2,7 @@
 
 ``` js
 import { SocketServer } from "socket-db";
+
 const server = new SocketServer({
     folder: './databases/',
     password: '12345678',
