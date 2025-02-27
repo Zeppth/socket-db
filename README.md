@@ -1,6 +1,5 @@
 # socket-db
 
-```
-js
+``` js
 import { SocketClient, SocketServer } from "socket-db";
 ```
