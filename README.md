@@ -1,4 +1,7 @@
-# socket-db
+Instalar:
+```bash
+npm install socket-db@https://github.com/Zeppth/socket-db
+```
 
 ``` js
 import { SocketServer } from "socket-db";
