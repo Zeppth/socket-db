@@ -21,3 +21,23 @@ server.ev.on('connection', (data) => {
 
 await server.load()
 ```
+``` js
+import { SocketClient } from "socket-db";
+
+const server = new SocketClient({
+    url: 'ws://localhost:8080',
+    password: '12345678'
+})
+
+server.ev.on('error', (data) => {
+    console.log('error', data)
+})
+server.ev.on('message', (data) => {
+    console.log('message', data)
+})
+server.ev.on('connection', (data) => {
+    console.log('connection', data)
+})
+
+await server.start()
+```
