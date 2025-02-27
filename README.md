@@ -1,5 +1,20 @@
 # socket-db
 
 ``` js
-import { SocketClient, SocketServer } from "socket-db";
+import { SocketServer } from "socket-db";
+const server = new SocketServer({
+    folder: './databases/',
+    password: 'bot@db:Websocket',
+    port: 8080,
+})
+
+server.ev.on('error', (data) => {
+    console.log('error', data)
+})
+server.ev.on('message', (data) => {
+    console.log('message', data)
+})
+server.ev.on('connection', (data) => {
+    console.log('connection', data)
+})
 ```
