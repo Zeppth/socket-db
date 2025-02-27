@@ -4,7 +4,11 @@
   "type": "module",
   "main": "src/index.js",
   "module": "src/index.js",
+  "scripts": {
+    "start": "node ./src/run.server.js"
+  },
   "dependencies": {
+    "express": "^4.19.2",
     "lodash": "^4.17.21",
     "lowdb": "^7.0.1",
     "ws": "^8.18.0"
