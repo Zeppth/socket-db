@@ -1,6 +1,6 @@
 import util from 'util'
-import { SocketServer } from "./fun.server";
-import { randomId } from "./fun.utils";
+import { SocketServer } from "./fun.server.js";
+import { randomId } from "./fun.utils.js";
 import express from 'express'
 
 let start = false
