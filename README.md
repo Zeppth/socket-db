@@ -18,4 +18,6 @@ server.ev.on('message', (data) => {
 server.ev.on('connection', (data) => {
     console.log('connection', data)
 })
+
+await server.load()
 ```
