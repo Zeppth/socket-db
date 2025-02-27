@@ -4,7 +4,7 @@
 import { SocketServer } from "socket-db";
 const server = new SocketServer({
     folder: './databases/',
-    password: 'bot@db:Websocket',
+    password: '12345678',
     port: 8080,
 })
 
