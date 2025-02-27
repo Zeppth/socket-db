@@ -11,11 +11,14 @@ export class SocketServer {
         port = 8080,
         folder = 'data',
         password = '',
+        app = ''
     }) {
         this.port = port;
         this.password = password
         this.ev = new EventEmitter()
-        this.server = http.createServer();
+        this.server = app
+            ? http.createServer(app)
+            : http.createServer()
         this.lowdb = new FunLowDB(folder)
         this.load = async () =>
             await this.lowdb.load()

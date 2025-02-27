@@ -212,7 +212,8 @@ export class Socket {
                 setTimeout(() => {
                     const error = {};
                     error.type = ERROR_TYPES.RECONNECTING;
-                    error.message = `Reconnecting in ${that.reconnDelay / 1000} seconds...`;
+                    error.message = `Reconnecting in ${that
+                        .reconnDelay / 1000} seconds...`;
                     that.ev.emit('error', error);
                     that.start();
                 }, that.reconnDelay);
