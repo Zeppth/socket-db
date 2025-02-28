@@ -48,6 +48,7 @@ const client = new SocketClient({
 | Método                          | Descripción                                      |
 | ------------------------------- | ------------------------------------------------ |
 | `client.create(nombre, objeto)` | Crea una nueva base de datos                     |
+| `client.delete(nombre)`         | Elimina una base de datos                        |
 | `client.open(nombre)`           | Abre una base de datos existente                 |
 
 ### Métodos de la Base de Datos (`db`)
