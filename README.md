@@ -1,10 +1,10 @@
 # Socket-DB
 
-**Socket-DB** es una base de datos basada en WebSockets que permite almacenar, modificar y recuperar mediante conexiones cliente-servidor.
+**Socket-DB** es una base de datos basada en WebSockets que permite almacenar, modificar y recuperar datos en tiempo real mediante conexiones cliente-servidor.
 
 ## Instalación
 
-Instala en tu proyecto:
+Para instalarlo en tu proyecto, usa:
 
 ```sh
 npm install github:Zeppth/socket-db
@@ -14,17 +14,19 @@ npm install github:Zeppth/socket-db
 
 ### Servidor
 
+Para iniciar un servidor de base de datos:
+
 ```js
 const server = new SocketServer({
-    folder: './databases/',
-    password: '12345678',
-    port: 8080
+    folder: './databases/', // Carpeta donde se almacenarán las bases de datos
+    password: '12345678', // Contraseña de acceso
+    port: 8080 // Puerto del servidor
 });
 ```
 
 ### Cliente
 
-El cliente se conecta al servidor de WebSockets utilizando una URL y una contraseña. Una vez conectado, puede interactuar con la base de datos, creando, modificando y consultando datos en tiempo real.
+Para conectar un cliente al servidor y comenzar a interactuar con la base de datos:
 
 ```js
 const client = new SocketClient({
@@ -35,10 +37,10 @@ const client = new SocketClient({
 
 ## Eventos
 
-| Evento       | Descripción                                       |
-| ------------ | ------------------------------------------------- |
-| `error`      | Captura errores en el servidor o cliente          |
-| `message`    | Recibe mensajes del servidor                      |
+| Evento       | Descripción                                      |
+|-------------|--------------------------------------------------|
+| `error`      | Captura errores en el servidor o cliente        |
+| `message`    | Recibe mensajes del servidor                    |
 | `connection` | Detecta cuando un usuario se conecta o desconecta |
 
 ## Métodos
@@ -46,8 +48,8 @@ const client = new SocketClient({
 ### Métodos del Cliente (`client`)
 
 | Método                          | Descripción                                      |
-| ------------------------------- | ------------------------------------------------ |
-| `client.create(nombre, objeto)` | Crea una nueva base de datos                     |
+|--------------------------------|------------------------------------------------|
+| `client.create(nombre, objeto)` | Crea una nueva base de datos                    |
 | `client.delete(nombre)`         | Elimina una base de datos                        |
 | `client.open(nombre)`           | Abre una base de datos existente                 |
 
@@ -56,21 +58,24 @@ const client = new SocketClient({
 Para utilizar estos métodos, primero se debe abrir una base de datos con `client.open(nombre)`.
 
 | Método                  | Descripción                                      |
-| ------------------------ | ------------------------------------------------ |
-| `db.set(path, objeto)`  | Guarda un valor en la base de datos              |
+|------------------------|------------------------------------------------|
 | `db.get(path?)`         | Obtiene un valor de la base de datos             |
-| `db.assign(path, objeto)` | Modifica parcialmente un objeto almacenado       |
 | `db.has(path)`          | Verifica si una clave existe en la base de datos |
+| `db.set(path, objeto)`  | Guarda un valor en la base de datos              |
 | `db.delete(path)`       | Elimina una clave de la base de datos            |
+| `db.assign(path, objeto)` | Modifica parcialmente un objeto almacenado     |
 | `db.chain`              | Permite realizar múltiples operaciones en cadena |
 
 ## Notas
 
-- Las operaciones deben ser asíncronas (`await`).
-- `db.chain` permite realizar múltiples operaciones antes de enviarlas con `.run()`.
-- La seguridad está basada en una contraseña compartida entre cliente y servidor.
+- Todas las operaciones son asíncronas, por lo que se debe usar `await` para evitar errores.
+- `db.chain` permite ejecutar múltiples operaciones de forma encadenada antes de enviarlas con `.run()`.
+- La conexión entre cliente y servidor está protegida mediante una contraseña definida al iniciar el servidor.
+- Si una base de datos no existe al abrirla con `client.open(nombre)`, se generará un error.
+- `db.has(path)` puede ser útil para verificar la existencia de datos antes de modificarlos o eliminarlos.
+
+**Nota:** Este proyecto no está disponible en NPM.
 
 
-Este proyecto no está disponible en NPM.
 
 
