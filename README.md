@@ -1,6 +1,6 @@
 # Socket-DB
 
-Socket-DB es una base de datos en tiempo real basada en WebSockets.
+Socket-DB es una base de datos basada en WebSockets.
 
 ## Instalación
 
