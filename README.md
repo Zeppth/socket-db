@@ -1,10 +1,10 @@
 # Socket-DB
 
-**Socket-DB** es una base de datos basada en WebSockets que permite almacenar, modificar y recuperar datos en tiempo real mediante conexiones cliente-servidor.
+**Socket-DB** es una base de datos basada en WebSockets que permite almacenar, modificar y recuperar mediante conexiones cliente-servidor.
 
 ## Instalación
 
-Actualmente, este proyecto no está en NPM. Para usarlo, clona el repositorio:
+Instala en tu proyecto:
 
 ```sh
 npm install github:Zeppth/socket-db
