@@ -70,8 +70,7 @@ Para utilizar estos métodos, primero se debe abrir una base de datos con `clien
 - `db.chain` permite realizar múltiples operaciones antes de enviarlas con `.run()`.
 - La seguridad está basada en una contraseña compartida entre cliente y servidor.
 
-## Licencia
 
-Este proyecto no está disponible en NPM y su uso está sujeto a las condiciones del repositorio original.
+Este proyecto no está disponible en NPM.
 
 
