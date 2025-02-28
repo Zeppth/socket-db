@@ -1,8 +1,10 @@
 # Socket-DB
 
-Socket-DB es una base de datos basada en WebSockets.
+**Socket-DB** es una base de datos basada en WebSockets que permite almacenar, modificar y recuperar datos en tiempo real mediante conexiones cliente-servidor.
 
 ## Instalación
+
+Actualmente, este proyecto no está en NPM. Para usarlo, clona el repositorio:
 
 ```sh
 npm install github:Zeppth/socket-db
@@ -10,56 +12,65 @@ npm install github:Zeppth/socket-db
 
 ## Uso
 
-### Importar
+### Servidor
 
-```javascript
-import { SocketClient } from "socket-db";
+```js
+const server = new SocketServer({
+    folder: './databases/',
+    password: '12345678',
+    port: 8080
+});
 ```
 
-### Conectar a un servidor
+### Cliente
 
-```javascript
+El cliente se conecta al servidor de WebSockets utilizando una URL y una contraseña. Una vez conectado, puede interactuar con la base de datos, creando, modificando y consultando datos en tiempo real.
+
+```js
 const client = new SocketClient({
-    url: "ws://localhost:8080",
-    password: "12345678"
+    url: 'ws://localhost:8080', // Dirección del servidor
+    password: '12345678' // Contraseña de acceso
 });
-
-client.ev.on("error", (e) => console.log("Error:", e));
-client.ev.on("message", (data) => console.log("Mensaje:", data));
-client.ev.on("connection", (data) => {
-    if (data.type === "open") console.log("Conectado al servidor");
-    if (data.type === "close") console.log("Desconectado del servidor");
-});
-
-await client.start();
 ```
 
-### Base de datos
+## Eventos
 
-```javascript
-await client.createDB("system:data", {});
-const db = client.dataBase("system:data");
+| Evento       | Descripción                                       |
+| ------------ | ------------------------------------------------- |
+| `error`      | Captura errores en el servidor o cliente          |
+| `message`    | Recibe mensajes del servidor                      |
+| `connection` | Detecta cuando un usuario se conecta o desconecta |
 
-await db.set("users", {});
-await db.get();
-await db.assign("users", { carlos: { edad: "18" } });
-await db.has("users");
-await db.delete("users");
-```
+## Métodos
 
-### Operaciones en cadena
+### Métodos del Cliente (`client`)
 
-```javascript
-const chain = db.chain;
+| Método                          | Descripción                                      |
+| ------------------------------- | ------------------------------------------------ |
+| `client.create(nombre, objeto)` | Crea una nueva base de datos                     |
+| `client.open(nombre)`           | Abre una base de datos existente                 |
 
-await chain.set("users", {}).get("users").run();
-await chain.set("users", {}).get().run();
+### Métodos de la Base de Datos (`db`)
 
-await chain
-    .set("users", {})
-    .set("chats", {})
-    .set("settings", {})
-    .assign("users", { carlos: { edad: "18" } })
-    .run();
-```
+Para utilizar estos métodos, primero se debe abrir una base de datos con `client.open(nombre)`.
+
+| Método                  | Descripción                                      |
+| ------------------------ | ------------------------------------------------ |
+| `db.set(path, objeto)`  | Guarda un valor en la base de datos              |
+| `db.get(path?)`         | Obtiene un valor de la base de datos             |
+| `db.assign(path, objeto)` | Modifica parcialmente un objeto almacenado       |
+| `db.has(path)`          | Verifica si una clave existe en la base de datos |
+| `db.delete(path)`       | Elimina una clave de la base de datos            |
+| `db.chain`              | Permite realizar múltiples operaciones en cadena |
+
+## Notas
+
+- Las operaciones deben ser asíncronas (`await`).
+- `db.chain` permite realizar múltiples operaciones antes de enviarlas con `.run()`.
+- La seguridad está basada en una contraseña compartida entre cliente y servidor.
+
+## Licencia
+
+Este proyecto no está disponible en NPM y su uso está sujeto a las condiciones del repositorio original.
+
 
